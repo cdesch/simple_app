@@ -1,0 +1,40 @@
+version: '3.6'
+services:
+  db:
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_DB: ex_def_dev
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+    image: 'postgres:13'
+    volumes:
+      - 'pgdata:/var/lib/postgresql/data'
+  web:
+    build: .
+    command: mix phx.server
+    depends_on:
+      - db
+    environment:
+      MIX_ENV: dev
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ex_def_dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POOL_SIZE: "10"      
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: admin  
+      RABBITMQ_PASS: password
+      GRAFANA_HOST: "http://grafana:3000"
+      # GRAFANA_PORT: 3000
+      GRAFANA_USER: admin
+      GRAFANA_PASSWORD: password
+
+    
+    ports:
+      - '4000:4000'
+    volumes:
+      - .:/app
+volumes:
+  pgdata:

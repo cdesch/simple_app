@@ -12,6 +12,21 @@ if System.get_env("PHX_SERVER") && System.get_env("RELEASE_NAME") do
   config :simple_app, SimpleAppWeb.Endpoint, server: true
 end
 
+
+if config_env() == :dev do
+  if System.get_env("DATABASE_URL") do
+
+    maybe_ipv6 = if System.get_env("ECTO_IPV6"), do: [:inet6], else: []
+    config :simple_app, SimpleApp.Repo,
+      # ssl: true,
+      url: System.get_env("DATABASE_URL"),
+      pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
+      socket_options: maybe_ipv6
+  end
+end
+
+
+
 if config_env() == :prod do
   database_url =
     System.get_env("DATABASE_URL") ||

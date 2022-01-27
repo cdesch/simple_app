@@ -15,9 +15,11 @@ defmodule SimpleApp.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: SimpleApp.PubSub},
       # Start the Endpoint (http/https)
-      SimpleAppWeb.Endpoint
+      SimpleAppWeb.Endpoint,
       # Start a worker by calling: SimpleApp.Worker.start_link(arg)
       # {SimpleApp.Worker, arg}
+      {SimpleApp.CounterSup, [10000, 10001]}
+
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
